@@ -27,28 +27,22 @@ export default {
   },
   mixins: [createTileArray],
   data: () => {
-    const rowsInit = 10;
-    const columnsInit = 19;
-    //const tilesArray = Array.from(
-    //  new Array(rows), () => Array(columns).fill('unopened')
-    //);
-    const tilesArray = this.createTileArray(rowsInit, columnsInit);
     return {
-      rows: rowsInit,
-      columns: columnsInit,
-      tiles: tilesArray,
+      tiles: [],
     };
   },
   methods: {
     startGame: function() {
-      try{
-        this.tiles = this.createTileArray(this.rows, this.columns);
-      }
-      catch(e) {
-        console.log(e);
-      }
-      
+      const rows = 10;
+      const columns = 19;
+      this.tiles = this.createTileArray(rows, columns);
     }
+  },
+  created: function() {
+    const rows = 10;
+    const columns = 19;
+    this.tiles = this.createTileArray(rows, columns);
+    this.tiles[1][1] = 'mine';
   }
 };
 </script>
