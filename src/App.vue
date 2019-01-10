@@ -1,33 +1,50 @@
 <template>
   <div id="app">
-    <button>Start Game</button>
+    <button @click="startGame">Start Game</button>
     <table class="minesweeper">
-      <tr>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-      </tr>
-      <tr>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
+      <tr
+        v-for="(row, rowIndex) in tiles"
+        :key="rowIndex"
+      >
+        <Tile
+          v-for="(column, columnIndex) in row"
+          :key="columnIndex"
+          :action-state="column"
+        />
       </tr>
     </table>
   </div>
 </template>
 
 <script>
+import Tile from './components/Tile.vue';
+import { TILE_RANGE } from './constants/constant.js';
+
 export default {
   name: 'App',
+  components: {
+    Tile
+  },
   data: () => {
-    return {};
+    return {
+      tiles: [],
+    };
   },
   methods: {
-
+    createTileArray: function(rows, columns) {
+      return Array.from(
+        new Array(rows), () => Array(columns).fill('unopened')
+      );
+    },
+    startGame: function() {
+      this.initTiles();
+    },
+    initTiles: function() {
+      this.tiles = this.createTileArray(TILE_RANGE.ROWS, TILE_RANGE.COLUMNS);
+    }
+  },
+  created: function() {
+    this.initTiles();
   }
 };
 </script>
@@ -55,55 +72,5 @@ table.minesweeper td {
   width: 24px;
   height: 24px;
   background-size: cover;
-}
-
-td.unopened {
-  background: url('./assets/unopened.svg');
-  cursor: pointer;
-}
-
-td.opened {
-  background: url('./assets/opened.svg');
-}
-
-td.flagged {
-  background: url('./assets/flag.svg');
-  cursor: pointer;
-}
-
-td.mine {
-  background: url('./assets/mine.png');
-}
-
-td.mine-neighbor-1 {
-  background: url('./assets/1.svg');
-}
-
-td.mine-neighbor-2 {
-  background: url('./assets/2.svg');
-}
-
-td.mine-neighbor-3 {
-  background: url('./assets/3.svg');
-}
-
-td.mine-neighbor-4 {
-  background: url('./assets/4.svg');
-}
-
-td.mine-neighbor-5 {
-  background: url('./assets/5.svg');
-}
-
-td.mine-neighbor-6 {
-  background: url('./assets/6.svg');
-}
-
-td.mine-neighbor-7 {
-  background: url('./assets/7.svg');
-}
-
-td.mine-neighbor-8 {
-  background: url('./assets/8.svg');
 }
 </style>
