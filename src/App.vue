@@ -18,31 +18,33 @@
 
 <script>
 import Tile from './components/Tile.vue';
-import createTileArray from './mixins/util/createTileArray.js';
+import { TILE_RANGE } from './constants/constant.js';
 
 export default {
   name: 'App',
   components: {
     Tile
   },
-  mixins: [createTileArray],
   data: () => {
     return {
       tiles: [],
     };
   },
   methods: {
+    createTileArray: function(rows, columns) {
+      return Array.from(
+        new Array(rows), () => Array(columns).fill('unopened')
+      );
+    },
     startGame: function() {
-      const rows = 10;
-      const columns = 19;
-      this.tiles = this.createTileArray(rows, columns);
+      this.initTiles();
+    },
+    initTiles: function() {
+      this.tiles = this.createTileArray(TILE_RANGE.ROWS, TILE_RANGE.COLUMNS);
     }
   },
   created: function() {
-    const rows = 10;
-    const columns = 19;
-    this.tiles = this.createTileArray(rows, columns);
-    this.tiles[1][1] = 'mine';
+    this.initTiles();
   }
 };
 </script>
