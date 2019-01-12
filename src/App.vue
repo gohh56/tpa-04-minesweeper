@@ -9,7 +9,11 @@
         <Tile
           v-for="(column, columnIndex) in row"
           :key="columnIndex"
+          :row-index="rowIndex"
+          :column-index="columnIndex"
           :action-state="column"
+          @open-tile="openTile"
+          @set-flag="setFlag"
         />
       </tr>
     </table>
@@ -41,7 +45,25 @@ export default {
     },
     initTiles: function() {
       this.tiles = this.createTileArray(TILE_RANGE.ROWS, TILE_RANGE.COLUMNS);
-    }
+    },
+    openTile: function() {
+      // if the tile is mined
+        // show a mine
+        // reveal all other tiles
+      // if its not mined
+        // collect information on its neighbors
+        // count how many mines surround the tile
+        // if there are mines
+          // reveal the number of mines that surround the tile
+        // if there are no mines
+          // show the tile as 'opened'
+          // (for each neighbor)
+            // (if the neighbor has not been opened yet)
+              // (open the neighbor)
+    },
+    setFlag: function(tile) {
+      tile = 'flagged';
+    },
   },
   created: function() {
     this.initTiles();

@@ -1,5 +1,9 @@
 <template>
-        <td :class="actionState"></td>
+        <td
+          :class="actionState"
+          @click="$emit('openTile')"
+          @contextmenu="$emit('setFlag')"
+        ></td>
 </template>
 
 <script>
@@ -9,7 +13,23 @@ export default {
     actionState: {
       type: String,
       required: true
-    }
+    },
+    rowIndex: {
+      type: Number,
+      required: true
+    },
+    columnIndex: {
+      tyoe: Number,
+      required: true
+    },
+  },
+  data: function() {
+    return {
+      row: 0,
+      column: 0,
+      mined: Math.random() * 6 > 5,
+      class: 'unopened',
+    };
   }
 };
 </script>
