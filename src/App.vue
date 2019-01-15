@@ -6,12 +6,12 @@
         v-for="(row, rowIndex) in tiles"
         :key="rowIndex"
       >
-        <Tile
+        <TileItem
           v-for="(column, columnIndex) in row"
           :key="columnIndex"
           :row-index="rowIndex"
           :column-index="columnIndex"
-          :action-state="column"
+          :active-state="column"
           @open-tile="openTile"
           @set-flag="setFlag"
         />
@@ -21,13 +21,13 @@
 </template>
 
 <script>
-import Tile from './components/Tile.vue';
+import TileItem from './components/TileItem.vue';
 import { TILE_RANGE } from './constants/constant.js';
 
 export default {
   name: 'App',
   components: {
-    Tile
+    TileItem
   },
   data: () => {
     return {
@@ -35,17 +35,39 @@ export default {
     };
   },
   methods: {
+    /**
+     * create tiles
+     * @function
+     * @param {Number} rows - count of tiles row.
+     * @param {Number} columns - count of tiles column. 
+     * @return {Array}
+     */
     createTileArray: function(rows, columns) {
       return Array.from(
         new Array(rows), () => Array(columns).fill('unopened')
       );
     },
-    startGame: function() {
-      this.initTiles();
-    },
+    /**
+     * initialize tiles
+     * @function
+     * @return {undifined}
+     */
     initTiles: function() {
       this.tiles = this.createTileArray(TILE_RANGE.ROWS, TILE_RANGE.COLUMNS);
     },
+    /**
+     * game start
+     * @function
+     * @return {undifined}
+     */
+    startGame: function() {
+      this.initTiles();
+    },
+    /**
+     * open tile
+     * @function
+     * @return {undifined}
+     */
     openTile: function() {
       // if the tile is mined
         // show a mine
@@ -60,9 +82,18 @@ export default {
           // (for each neighbor)
             // (if the neighbor has not been opened yet)
               // (open the neighbor)
+      console.log('openTile run');
     },
+    /**
+     * flags a tile
+     * @function
+     * @param {Object} tile - a tile object
+     * @return {undifined}
+     */
     setFlag: function(tile) {
-      tile = 'flagged';
+      console.log('setFlag run');
+      console.log(tile.rowIndex);
+      this.tiles[tile.rowIndex][tile.columnIndex] = 'flagged';
     },
   },
   created: function() {

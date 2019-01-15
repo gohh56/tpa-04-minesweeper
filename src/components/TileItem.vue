@@ -1,34 +1,31 @@
 <template>
-        <td
-          :class="actionState"
-          @click="$emit('openTile')"
-          @contextmenu="$emit('setFlag')"
-        ></td>
+  <td
+    :class="activeState"
+    @click="$emit('open-tile')"
+    @click.right.prevent="$emit('set-flag')"
+  ></td>
 </template>
 
 <script>
 export default {
-  name: 'Tile',
+  name: 'TileItem',
   props: {
-    actionState: {
-      type: String,
-      required: true
-    },
     rowIndex: {
       type: Number,
       required: true
     },
     columnIndex: {
-      tyoe: Number,
+      type: Number,
       required: true
     },
+    activeState: {
+      type: String,
+      required: true
+    }
   },
   data: function() {
     return {
-      row: 0,
-      column: 0,
       mined: Math.random() * 6 > 5,
-      class: 'unopened',
     };
   }
 };
