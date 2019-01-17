@@ -12,8 +12,8 @@
           :row-index="rowIndex"
           :column-index="columnIndex"
           :active-state="column"
-          @open-tile="openTile"
-          @set-flag="setFlag"
+          @click-tile="openTile"
+          @right-click-tile="setFlag"
         />
       </tr>
     </table>
@@ -32,6 +32,7 @@ export default {
   data: () => {
     return {
       tiles: [],
+      column: null,
     };
   },
   methods: {
@@ -92,8 +93,11 @@ export default {
      */
     setFlag: function(tile) {
       console.log('setFlag run');
-      console.log(tile.rowIndex);
+      console.log(tile.rowIndex, tile.columnIndex, this.tiles[tile.rowIndex][tile.columnIndex]);
       this.tiles[tile.rowIndex][tile.columnIndex] = 'flagged';
+      this.column = tile;
+      console.log(this.tiles, this.column);
+
     },
   },
   created: function() {

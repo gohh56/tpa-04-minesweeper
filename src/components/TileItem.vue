@@ -1,8 +1,8 @@
 <template>
   <td
     :class="activeState"
-    @click="$emit('open-tile')"
-    @click.right.prevent="$emit('set-flag')"
+    @click.exact="clickTile"
+    @click.right.prevent="rightClickTile"
   ></td>
 </template>
 
@@ -27,6 +27,14 @@ export default {
     return {
       mined: Math.random() * 6 > 5,
     };
+  },
+  methods: {
+    clickTile: function() {
+      this.$emit('click-tile');
+    },
+    rightClickTile: function() {
+      this.$emit('right-click-tile',this);
+    }
   }
 };
 </script>
