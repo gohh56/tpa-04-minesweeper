@@ -88,16 +88,11 @@ export default {
     /**
      * flags a tile
      * @function
-     * @param {Object} tile - a tile object
+     * @param {Object} tile - TileItem component
      * @return {undifined}
      */
     setFlag: function(tile) {
-      console.log('setFlag run');
-      console.log(tile.rowIndex, tile.columnIndex, this.tiles[tile.rowIndex][tile.columnIndex]);
-      this.tiles[tile.rowIndex][tile.columnIndex] = 'flagged';
-      this.column = tile;
-      console.log(this.tiles, this.column);
-
+      this.tiles[tile.rowIndex].splice([tile.columnIndex], 1, 'flagged');
     },
   },
   created: function() {
