@@ -1,14 +1,39 @@
 <template>
-        <td :class="actionState"></td>
+  <td
+    :class="activeState"
+    @click.exact="clickTile"
+    @click.right.prevent="rightClickTile"
+  ></td>
 </template>
 
 <script>
 export default {
-  name: 'Tile',
+  name: 'TileItem',
   props: {
-    actionState: {
+    rowIndex: {
+      type: Number,
+      required: true
+    },
+    columnIndex: {
+      type: Number,
+      required: true
+    },
+    activeState: {
       type: String,
       required: true
+    }
+  },
+  data: function() {
+    return {
+      mined: Math.random() * 6 > 5,
+    };
+  },
+  methods: {
+    clickTile: function() {
+      this.$emit('click-tile');
+    },
+    rightClickTile: function() {
+      this.$emit('right-click-tile',this);
     }
   }
 };

@@ -6,10 +6,14 @@
         v-for="(row, rowIndex) in tiles"
         :key="rowIndex"
       >
-        <Tile
+        <TileItem
           v-for="(column, columnIndex) in row"
           :key="columnIndex"
-          :action-state="column"
+          :row-index="rowIndex"
+          :column-index="columnIndex"
+          :active-state="column"
+          @click-tile="openTile"
+          @right-click-tile="setFlag"
         />
       </tr>
     </table>
@@ -17,31 +21,79 @@
 </template>
 
 <script>
-import Tile from './components/Tile.vue';
+import TileItem from './components/TileItem.vue';
 import { TILE_RANGE } from './constants/constant.js';
 
 export default {
   name: 'App',
   components: {
-    Tile
+    TileItem
   },
   data: () => {
     return {
       tiles: [],
+      column: null,
     };
   },
   methods: {
+    /**
+     * create tiles
+     * @function
+     * @param {Number} rows - count of tiles row.
+     * @param {Number} columns - count of tiles column. 
+     * @return {Array}
+     */
     createTileArray: function(rows, columns) {
       return Array.from(
         new Array(rows), () => Array(columns).fill('unopened')
       );
     },
+    /**
+     * initialize tiles
+     * @function
+     * @return {undifined}
+     */
+    initTiles: function() {
+      this.tiles = this.createTileArray(TILE_RANGE.ROWS, TILE_RANGE.COLUMNS);
+    },
+    /**
+     * game start
+     * @function
+     * @return {undifined}
+     */
     startGame: function() {
       this.initTiles();
     },
-    initTiles: function() {
-      this.tiles = this.createTileArray(TILE_RANGE.ROWS, TILE_RANGE.COLUMNS);
-    }
+    /**
+     * open tile
+     * @function
+     * @return {undifined}
+     */
+    openTile: function() {
+      // if the tile is mined
+        // show a mine
+        // reveal all other tiles
+      // if its not mined
+        // collect information on its neighbors
+        // count how many mines surround the tile
+        // if there are mines
+          // reveal the number of mines that surround the tile
+        // if there are no mines
+          // show the tile as 'opened'
+          // (for each neighbor)
+            // (if the neighbor has not been opened yet)
+              // (open the neighbor)
+      console.log('openTile run');
+    },
+    /**
+     * flags a tile
+     * @function
+     * @param {Object} tile - TileItem component
+     * @return {undifined}
+     */
+    setFlag: function(tile) {
+      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'flagged');
+    },
   },
   created: function() {
     this.initTiles();
