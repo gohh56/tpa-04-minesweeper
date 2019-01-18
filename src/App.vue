@@ -92,7 +92,7 @@ export default {
      * @return {undifined}
      */
     setFlag: function(tile) {
-      this.tiles[tile.rowIndex].splice([tile.columnIndex], 1, 'flagged');
+      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'flagged');
     },
   },
   created: function() {
