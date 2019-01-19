@@ -51,7 +51,7 @@ export default {
     /**
      * initialize tiles
      * @function
-     * @return {undifined}
+     * @return {undefined}
      */
     initTiles: function() {
       this.tiles = this.createTileArray(TILE_RANGE.ROWS, TILE_RANGE.COLUMNS);
@@ -59,7 +59,7 @@ export default {
     /**
      * game start
      * @function
-     * @return {undifined}
+     * @return {undefined}
      */
     startGame: function() {
       this.initTiles();
@@ -67,7 +67,8 @@ export default {
     /**
      * open tile
      * @function
-     * @return {undifined}
+     * @tile
+     * @return {undefined}
      */
     openTile: function() {
       // if the tile is mined
@@ -83,13 +84,65 @@ export default {
           // (for each neighbor)
             // (if the neighbor has not been opened yet)
               // (open the neighbor)
-      console.log('openTile run');
+    },
+    /** 
+     * show mine
+     * @function
+     * @param {Object} tile - TileItem component
+     * @return {undefined}
+     */
+    showMine: function(tile) {
+      //show mine
+    },
+    /**
+     * show all tiles
+     * @function
+     * @return {undefined}
+     */
+    showAllTiles: function(tile) {
+      //show All Tiles
+    },
+    /**
+     * collect information on its neighbors
+     * @function
+     * @param {Object} tile - TileItem component
+     * @return {Boolean} - tile is mine 
+     */
+    isMine: function(tile) {
+      //is Mine?
+    },
+    /**
+     * show the number of mines
+     * @function
+     * @param {Number} - the number of mines
+     * @return {String} - tile activeState
+     */
+    setNumber: function() {
+      //set Number class
+    },
+    /**
+     * opens a tile
+     * @function
+     * @param {Object} - tile component
+     * @return {undefined}
+     */
+    setOpen: function() {
+      //set open
+    },
+    /**
+     * open a neighbors
+     * @function
+     * @param {Object} - tile component
+     * @return {undefined}
+     */
+    setOpenNeighbor: function() {
+      //set open neighbors
     },
     /**
      * flags a tile
      * @function
      * @param {Object} tile - TileItem component
-     * @return {undifined}
+     * @return {undefined}
      */
     setFlag: function(tile) {
       this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'flagged');
