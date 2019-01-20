@@ -29,9 +29,19 @@ export default {
     };
   },
   methods: {
+    /**
+     * click tile
+     * @function
+     * @return {Event} click-tile - click tile event
+     */
     clickTile: function() {
-      this.$emit('click-tile');
+      this.$emit('click-tile', this);
     },
+    /**
+     * right click tile
+     * @function
+     * @return {Event} right click tile - right click tile event
+     */
     rightClickTile: function() {
       this.$emit('right-click-tile',this);
     }

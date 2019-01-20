@@ -67,11 +67,15 @@ export default {
     /**
      * open tile
      * @function
-     * @tile
+     * @param {Object} tile - TileItem component
      * @return {undefined}
      */
-    openTile: function() {
+    openTile: function(tile) {
       // if the tile is mined
+      if (tile.mined = true) {
+        console.log('this is mine');
+        setMine(tile);
+      }
         // show a mine
         // reveal all other tiles
       // if its not mined
@@ -91,15 +95,15 @@ export default {
      * @param {Object} tile - TileItem component
      * @return {undefined}
      */
-    showMine: function(tile) {
-      //show mine
+    setMine: function(tile) {
+      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'mine');
     },
     /**
      * show all tiles
      * @function
      * @return {undefined}
      */
-    showAllTiles: function(tile) {
+    showAll: function(tile) {
       //show All Tiles
     },
     /**
@@ -110,15 +114,17 @@ export default {
      */
     isMine: function(tile) {
       //is Mine?
+      if (tile.mined) return 1;
     },
     /**
      * show the number of mines
      * @function
-     * @param {Number} - the number of mines
+     * @param {Object} tile - TileItem component
+     * @param {Number} countOfMine - the number of mines
      * @return {String} - tile activeState
      */
-    setNumber: function() {
-      //set Number class
+    setNumber: function(tile, countOfMine) {
+      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'mine-neighbor-' + countOfMine);
     },
     /**
      * opens a tile
@@ -126,17 +132,8 @@ export default {
      * @param {Object} - tile component
      * @return {undefined}
      */
-    setOpen: function() {
-      //set open
-    },
-    /**
-     * open a neighbors
-     * @function
-     * @param {Object} - tile component
-     * @return {undefined}
-     */
-    setOpenNeighbor: function() {
-      //set open neighbors
+    setOpen: function(tile) {
+      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'opened');
     },
     /**
      * flags a tile
