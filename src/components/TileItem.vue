@@ -1,6 +1,6 @@
 <template>
   <td
-    :class="activeState"
+    :class="checkMine"
     @click.exact="clickTile"
     @click.right.prevent="rightClickTile"
   ></td>
@@ -27,6 +27,11 @@ export default {
     return {
       mined: Math.random() * 6 > 5,
     };
+  },
+  computed: {
+    checkMine() {
+      return this.mined ? 'mine' : 'unopened';
+    }
   },
   methods: {
     /**

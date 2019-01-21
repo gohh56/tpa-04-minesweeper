@@ -45,7 +45,11 @@ export default {
      */
     createTileArray: function(rows, columns) {
       return Array.from(
-        new Array(rows), () => Array(columns).fill('unopened')
+        new Array(rows), () => 
+          Array(columns).fill(
+          '{ class: unopened,
+             : '
+          )
       );
     },
     /**
@@ -54,6 +58,7 @@ export default {
      * @return {undefined}
      */
     initTiles: function() {
+      console.log('init tiles');
       this.tiles = this.createTileArray(TILE_RANGE.ROWS, TILE_RANGE.COLUMNS);
     },
     /**
@@ -62,6 +67,7 @@ export default {
      * @return {undefined}
      */
     startGame: function() {
+      console.log('start game');
       this.initTiles();
     },
     /**
@@ -74,7 +80,8 @@ export default {
       // if the tile is mined
       if (tile.mined = true) {
         console.log('this is mine');
-        setMine(tile);
+        console.log(tile.mined);
+        this.setMine(tile);
       }
         // show a mine
         // reveal all other tiles
