@@ -50,6 +50,8 @@ export default {
     rightClickTile: function() {
       this.$emit('right-click-tile',this);
     }
+  },created: function() {
+    this.$emit('created-tile', this.mined);
   }
 };
 </script>

@@ -12,7 +12,7 @@
           :row-index="rowIndex"
           :column-index="columnIndex"
           :active-state="column"
-          @click-tile="openTile"
+          @click-tile="console.log(TileItem.mined)"
           @right-click-tile="setFlag"
         />
       </tr>
@@ -33,6 +33,7 @@ export default {
     return {
       tiles: [],
       column: null,
+      tileMines: [],
     };
   },
   methods: {
@@ -46,10 +47,7 @@ export default {
     createTileArray: function(rows, columns) {
       return Array.from(
         new Array(rows), () => 
-          Array(columns).fill(
-          '{ class: unopened,
-             : '
-          )
+          Array(columns).fill('unopened')
       );
     },
     /**
@@ -78,9 +76,10 @@ export default {
      */
     openTile: function(tile) {
       // if the tile is mined
-      if (tile.mined = true) {
+      console.log(tile.mined);
+      console.log(this.tileMines);
+      if (tile.mined === true) {
         console.log('this is mine');
-        console.log(tile.mined);
         this.setMine(tile);
       }
         // show a mine
