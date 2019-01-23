@@ -1,6 +1,6 @@
 <template>
   <td
-    :class="checkMine"
+    :class="activeState"
     @click.exact="clickTile"
     @click.right.prevent="rightClickTile"
   ></td>
@@ -51,7 +51,7 @@ export default {
       this.$emit('right-click-tile',this);
     }
   },created: function() {
-    this.$emit('created-tile', this.mined);
+    return this.$emit('created-tile', this);
   }
 };
 </script>

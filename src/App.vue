@@ -11,12 +11,14 @@
           :key="columnIndex"
           :row-index="rowIndex"
           :column-index="columnIndex"
-          :active-state="column"
+          :active-state="column.class"
           @click-tile="console.log(TileItem.mined)"
           @right-click-tile="setFlag"
+          @created-tile="setMine"
         />
       </tr>
     </table>
+    {{ $data }}
   </div>
 </template>
 
@@ -45,9 +47,13 @@ export default {
      * @return {Array}
      */
     createTileArray: function(rows, columns) {
+      const tileElement = {
+        class: 'unopened',
+        isMine: false
+      };
       return Array.from(
         new Array(rows), () => 
-          Array(columns).fill('unopened')
+          Array(columns).fill(tileElement)
       );
     },
     /**
@@ -78,7 +84,7 @@ export default {
       // if the tile is mined
       console.log(tile.mined);
       console.log(this.tileMines);
-      if (tile.mined === true) {
+      if (this.tileMines === true) {
         console.log('this is mine');
         this.setMine(tile);
       }
@@ -102,7 +108,11 @@ export default {
      * @return {undefined}
      */
     setMine: function(tile) {
-      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'mine');
+      let setTile = {
+        class: 'unopened',
+        isMine: tile.mined
+      }
+      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, setTile);
     },
     /**
      * show all tiles
