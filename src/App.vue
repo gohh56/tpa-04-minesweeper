@@ -1,14 +1,14 @@
 <template>
   <div id="app">
     <button @click="startGame">Start Game</button>
-    <table class="minesweeper">
+    <table class="minesweeper" v-if="activeGame">
       <tr
         v-for="(row, rowIndex) in tiles"
-        :key="rowIndex"
+        :key="row.id"
       >
         <TileItem
           v-for="(column, columnIndex) in row"
-          :key="columnIndex"
+          :key="column.id"
           :row-index="rowIndex"
           :column-index="columnIndex"
           :active-state="column.class"
@@ -35,7 +35,7 @@ export default {
     return {
       tiles: [],
       column: null,
-      tileMines: [],
+      activeGame: true,
     };
   },
   methods: {
@@ -63,6 +63,10 @@ export default {
      */
     initTiles: function() {
       console.log('init tiles');
+      const tileLength = this.tiles.length;
+      this.tiles.splice(0, tileLength, '');
+      console.log('after splice:', this.tiles);
+      console.log(this.activeGame);
       this.tiles = this.createTileArray(TILE_RANGE.ROWS, TILE_RANGE.COLUMNS);
     },
     /**
@@ -72,7 +76,10 @@ export default {
      */
     startGame: function() {
       console.log('start game');
+      //this.activeGame = false;
+      this.$forceUpdate();
       this.initTiles();
+      //this.activeGame = true;
     },
     /**
      * open tile
@@ -111,7 +118,7 @@ export default {
       let setTile = {
         class: 'unopened',
         isMine: tile.mined
-      }
+      };
       this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, setTile);
     },
     /**

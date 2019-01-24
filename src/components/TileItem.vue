@@ -1,6 +1,6 @@
 <template>
   <td
-    :class="activeState"
+    :class="checkMine"
     @click.exact="clickTile"
     @click.right.prevent="rightClickTile"
   ></td>
@@ -21,7 +21,7 @@ export default {
     activeState: {
       type: String,
       required: true
-    }
+    },
   },
   data: function() {
     return {
@@ -50,8 +50,19 @@ export default {
     rightClickTile: function() {
       this.$emit('right-click-tile',this);
     }
-  },created: function() {
+  },
+  created: function() {
+    console.log('tile created');
     return this.$emit('created-tile', this);
+  },
+  updated: function() {
+    console.log('tile updated');
+  },
+  mounted: function() {
+    console.log('tile mounted');
+  },
+  destroyed: function() {
+    console.log('tile destroyed');
   }
 };
 </script>
