@@ -93,7 +93,7 @@ export default {
             // (if the neighbor has not been opened yet)
               // (open the neighbor)
  
-      if (this.tiles[tile.rowIndex][tile.columnIndex].mined === true) {
+      if (this.tiles[tile.rowIndex][tile.columnIndex].mined) {
         this.setMine(tile);
         this.showAll();
       } else {
@@ -140,12 +140,12 @@ export default {
     /**
      * check target tile is mine or not
      * @function
-     * @param {Number} toCheckRow - check tile's row
-     * @param {Number} toCheckColumn - check tile's column
+     * @param {Number} row - check tile's row
+     * @param {Number} column - check tile's column
      * @return {Number} - if target tile is mine, return 1
      */
-    isMine: function(toCheckRow, toCheckColumn) {
-      return (this.tiles[toCheckRow][toCheckColumn].mined === true) ? 1 : 0;
+    isMine: function(row, column) {
+      return this.tiles[row][column].mined;
     },
     /**
      * collect information on its neighbors
@@ -160,7 +160,7 @@ export default {
         let toCheckRow = tile.rowIndex + countRange[rangeIndex].toAddRow;
         let toCheckColumn = tile.columnIndex + countRange[rangeIndex].toAddColumn;
         if (this.isInRange(toCheckRow, toCheckColumn)) {
-          countOfMine += this.isMine(toCheckRow, toCheckColumn);
+          countOfMine += this.isMine(toCheckRow, toCheckColumn) ? 1 : 0;
         }
       }
       return countOfMine;
