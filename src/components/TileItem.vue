@@ -1,6 +1,6 @@
 <template>
   <td
-    :class="checkMine"
+    :class="tileClass"
     @click.exact="clickTile"
     @click.right.prevent="rightClickTile"
   ></td>
@@ -18,19 +18,9 @@ export default {
       type: Number,
       required: true
     },
-    activeState: {
+    tileClass: {
       type: String,
       required: true
-    },
-  },
-  data: function() {
-    return {
-      mined: Math.random() * 6 > 5,
-    };
-  },
-  computed: {
-    checkMine() {
-      return this.mined ? 'mine' : 'unopened';
     }
   },
   methods: {
@@ -50,19 +40,6 @@ export default {
     rightClickTile: function() {
       this.$emit('right-click-tile',this);
     }
-  },
-  created: function() {
-    console.log('tile created');
-    return this.$emit('created-tile', this);
-  },
-  updated: function() {
-    console.log('tile updated');
-  },
-  mounted: function() {
-    console.log('tile mounted');
-  },
-  destroyed: function() {
-    console.log('tile destroyed');
   }
 };
 </script>

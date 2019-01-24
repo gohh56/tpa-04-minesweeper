@@ -1,30 +1,28 @@
 <template>
   <div id="app">
     <button @click="startGame">Start Game</button>
-    <table class="minesweeper" v-if="activeGame">
+    <table class="minesweeper">
       <tr
         v-for="(row, rowIndex) in tiles"
-        :key="row.id"
+        :key="rowIndex"
       >
         <TileItem
-          v-for="(column, columnIndex) in row"
-          :key="column.id"
+          v-for="(tileState, columnIndex) in row"
+          :key="columnIndex"
           :row-index="rowIndex"
           :column-index="columnIndex"
-          :active-state="column.class"
-          @click-tile="console.log(TileItem.mined)"
+          :tile-class="tileState.class"
+          @click-tile="openTile"
           @right-click-tile="setFlag"
-          @created-tile="setMine"
         />
       </tr>
     </table>
-    {{ $data }}
   </div>
 </template>
 
 <script>
 import TileItem from './components/TileItem.vue';
-import { TILE_RANGE } from './constants/constant.js';
+import { TILE_RANGE, COUNT_RANGE } from './constants/constant.js';
 
 export default {
   name: 'App',
@@ -33,9 +31,7 @@ export default {
   },
   data: () => {
     return {
-      tiles: [],
-      column: null,
-      activeGame: true,
+      tiles: []
     };
   },
   methods: {
@@ -47,14 +43,18 @@ export default {
      * @return {Array}
      */
     createTileArray: function(rows, columns) {
-      const tileElement = {
-        class: 'unopened',
-        isMine: false
-      };
-      return Array.from(
-        new Array(rows), () => 
-          Array(columns).fill(tileElement)
-      );
+      const tileArray = [];
+      for (let i = 0; i < rows; i += 1) {
+        tileArray.push([]);
+        for (let j = 0; j < columns; j += 1) {
+          const tileElement = {
+            class: 'unopened',
+            mined: Math.random() * 6 > 5
+          };
+          tileArray[i].push(tileElement);
+        }
+      }
+      return tileArray;
     },
     /**
      * initialize tiles
@@ -62,11 +62,6 @@ export default {
      * @return {undefined}
      */
     initTiles: function() {
-      console.log('init tiles');
-      const tileLength = this.tiles.length;
-      this.tiles.splice(0, tileLength, '');
-      console.log('after splice:', this.tiles);
-      console.log(this.activeGame);
       this.tiles = this.createTileArray(TILE_RANGE.ROWS, TILE_RANGE.COLUMNS);
     },
     /**
@@ -75,11 +70,7 @@ export default {
      * @return {undefined}
      */
     startGame: function() {
-      console.log('start game');
-      //this.activeGame = false;
-      this.$forceUpdate();
       this.initTiles();
-      //this.activeGame = true;
     },
     /**
      * open tile
@@ -89,15 +80,9 @@ export default {
      */
     openTile: function(tile) {
       // if the tile is mined
-      console.log(tile.mined);
-      console.log(this.tileMines);
-      if (this.tileMines === true) {
-        console.log('this is mine');
-        this.setMine(tile);
-      }
         // show a mine
         // reveal all other tiles
-      // if its not mined
+     // if its not mined
         // collect information on its neighbors
         // count how many mines surround the tile
         // if there are mines
@@ -107,6 +92,18 @@ export default {
           // (for each neighbor)
             // (if the neighbor has not been opened yet)
               // (open the neighbor)
+ 
+      if (this.tiles[tile.rowIndex][tile.columnIndex].mined === true) {
+        this.setMine(tile);
+        this.showAll();
+      } else {
+        let countOfMine = this.collectInfomationNeighbors(tile, COUNT_RANGE);
+        if (countOfMine > 0) {
+          this.setNumber(tile, countOfMine);
+        } else {
+          this.setOpen(tile);
+        }
+      }
     },
     /** 
      * show mine
@@ -115,29 +112,58 @@ export default {
      * @return {undefined}
      */
     setMine: function(tile) {
-      let setTile = {
-        class: 'unopened',
-        isMine: tile.mined
-      };
-      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, setTile);
+      this.tiles[tile.rowIndex][tile.columnIndex].class = 'mine';
     },
     /**
      * show all tiles
      * @function
      * @return {undefined}
      */
-    showAll: function(tile) {
+    showAll: function() {
       //show All Tiles
+      console.log('show all tiles');
+    },
+    /**
+     * check target tile is in tile's range
+     * @function
+     * @param {Number} toCheckRow - check tile's row
+     * @param {Number} toCheckColumn - check tile's column
+     * @return {Boolean} - if target tile is in range, return true
+     */
+    isInRange: function(toCheckRow, toCheckColumn) {
+      if (toCheckRow < 0) return false;
+      if (toCheckRow >= TILE_RANGE.ROWS) return false;
+      if (toCheckColumn < 0) return false;
+      if (toCheckColumn >= TILE_RANGE.COLUMNS) return false;
+      return true;
+    },
+    /**
+     * check target tile is mine or not
+     * @function
+     * @param {Number} toCheckRow - check tile's row
+     * @param {Number} toCheckColumn - check tile's column
+     * @return {Number} - if target tile is mine, return 1
+     */
+    isMine: function(toCheckRow, toCheckColumn) {
+      return (this.tiles[toCheckRow][toCheckColumn].mined === true) ? 1 : 0;
     },
     /**
      * collect information on its neighbors
      * @function
      * @param {Object} tile - TileItem component
-     * @return {Boolean} - tile is mine 
+     * @param {Array} countRange - around tiles of click tile
+     * @return {Number} - count how many mines surround the tile
      */
-    isMine: function(tile) {
-      //is Mine?
-      if (tile.mined) return 1;
+    collectInfomationNeighbors: function(tile, countRange) {
+      let countOfMine = 0;
+      for (let rangeIndex = 0; rangeIndex < countRange.length; rangeIndex += 1) {
+        let toCheckRow = tile.rowIndex + countRange[rangeIndex].toAddRow;
+        let toCheckColumn = tile.columnIndex + countRange[rangeIndex].toAddColumn;
+        if (this.isInRange(toCheckRow, toCheckColumn)) {
+          countOfMine += this.isMine(toCheckRow, toCheckColumn);
+        }
+      }
+      return countOfMine;
     },
     /**
      * show the number of mines
@@ -147,7 +173,8 @@ export default {
      * @return {String} - tile activeState
      */
     setNumber: function(tile, countOfMine) {
-      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'mine-neighbor-' + countOfMine);
+      this.tiles[tile.rowIndex][tile.columnIndex].class = 'mine-neighbor-' + countOfMine;
+      //this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'mine-neighbor-' + countOfMine);
     },
     /**
      * opens a tile
@@ -156,7 +183,7 @@ export default {
      * @return {undefined}
      */
     setOpen: function(tile) {
-      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'opened');
+      this.tiles[tile.rowIndex][tile.columnIndex].class = 'opened';
     },
     /**
      * flags a tile
@@ -165,7 +192,9 @@ export default {
      * @return {undefined}
      */
     setFlag: function(tile) {
-      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'flagged');
+      if (this.tiles[tile.rowIndex][tile.columnIndex].class === 'unopened') {
+        this.tiles[tile.rowIndex][tile.columnIndex].class = 'flagged';
+      }
     },
   },
   created: function() {
