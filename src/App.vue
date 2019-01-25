@@ -7,11 +7,11 @@
         :key="rowIndex"
       >
         <TileItem
-          v-for="(column, columnIndex) in row"
+          v-for="(tileState, columnIndex) in row"
           :key="columnIndex"
           :row-index="rowIndex"
           :column-index="columnIndex"
-          :active-state="column"
+          :tile-class="tileState.class"
           @click-tile="openTile"
           @right-click-tile="setFlag"
         />
@@ -22,7 +22,7 @@
 
 <script>
 import TileItem from './components/TileItem.vue';
-import { TILE_RANGE } from './constants/constant.js';
+import { TILE_RANGE, COUNT_RANGE } from './constants/constant.js';
 
 export default {
   name: 'App',
@@ -31,8 +31,7 @@ export default {
   },
   data: () => {
     return {
-      tiles: [],
-      column: null,
+      tiles: []
     };
   },
   methods: {
@@ -44,14 +43,23 @@ export default {
      * @return {Array}
      */
     createTileArray: function(rows, columns) {
-      return Array.from(
-        new Array(rows), () => Array(columns).fill('unopened')
-      );
+      const tileArray = [];
+      for (let i = 0; i < rows; i += 1) {
+        tileArray.push([]);
+        for (let j = 0; j < columns; j += 1) {
+          const tileElement = {
+            class: 'unopened',
+            mined: Math.random() * 6 > 5
+          };
+          tileArray[i].push(tileElement);
+        }
+      }
+      return tileArray;
     },
     /**
      * initialize tiles
      * @function
-     * @return {undifined}
+     * @return {undefined}
      */
     initTiles: function() {
       this.tiles = this.createTileArray(TILE_RANGE.ROWS, TILE_RANGE.COLUMNS);
@@ -59,7 +67,7 @@ export default {
     /**
      * game start
      * @function
-     * @return {undifined}
+     * @return {undefined}
      */
     startGame: function() {
       this.initTiles();
@@ -67,13 +75,14 @@ export default {
     /**
      * open tile
      * @function
-     * @return {undifined}
+     * @param {Object} tile - TileItem component
+     * @return {undefined}
      */
-    openTile: function() {
+    openTile: function(tile) {
       // if the tile is mined
         // show a mine
         // reveal all other tiles
-      // if its not mined
+     // if its not mined
         // collect information on its neighbors
         // count how many mines surround the tile
         // if there are mines
@@ -83,16 +92,111 @@ export default {
           // (for each neighbor)
             // (if the neighbor has not been opened yet)
               // (open the neighbor)
-      console.log('openTile run');
+ 
+      if (this.tiles[tile.rowIndex][tile.columnIndex].mined) {
+        this.setMine(tile);
+        this.showAll();
+      } else {
+        let countOfMine = this.collectInfomationNeighbors(tile, COUNT_RANGE);
+        if (countOfMine > 0) {
+          this.setNumber(tile, countOfMine);
+        } else {
+          this.setOpen(tile);
+        }
+      }
+    },
+    /** 
+     * show mine
+     * @function
+     * @param {Object} tile - TileItem component
+     * @return {undefined}
+     */
+    setMine: function(tile) {
+      this.tiles[tile.rowIndex][tile.columnIndex].class = 'mine';
+    },
+    /**
+     * show all tiles
+     * @function
+     * @return {undefined}
+     */
+    showAll: function() {
+      //show All Tiles
+      console.log('show all tiles');
+    },
+    /**
+     * check target tile is in tile's range
+     * @function
+     * @param {Number} toCheckRow - check tile's row
+     * @param {Number} toCheckColumn - check tile's column
+     * @return {Boolean} - if target tile is in range, return true
+     */
+    isInRange: function(toCheckRow, toCheckColumn) {
+      if (toCheckRow < 0) return false;
+      if (toCheckRow >= TILE_RANGE.ROWS) return false;
+      if (toCheckColumn < 0) return false;
+      if (toCheckColumn >= TILE_RANGE.COLUMNS) return false;
+      return true;
+    },
+    /**
+     * check target tile is mine or not
+     * @function
+     * @param {Number} row - check tile's row
+     * @param {Number} column - check tile's column
+     * @return {Number} - if target tile is mine, return 1
+     */
+    isMine: function(row, column) {
+      return this.tiles[row][column].mined;
+    },
+    /**
+     * collect information on its neighbors
+     * @function
+     * @param {Object} tile - TileItem component
+     * @param {Array} countRange - around tiles of click tile
+     * @return {Number} - count how many mines surround the tile
+     */
+    collectInfomationNeighbors: function(tile, countRange) {
+      let countOfMine = 0;
+      for (let rangeIndex = 0; rangeIndex < countRange.length; rangeIndex += 1) {
+        let toCheckRow = tile.rowIndex + countRange[rangeIndex].toAddRow;
+        let toCheckColumn = tile.columnIndex + countRange[rangeIndex].toAddColumn;
+        if (this.isInRange(toCheckRow, toCheckColumn)) {
+          countOfMine += this.isMine(toCheckRow, toCheckColumn) ? 1 : 0;
+        }
+      }
+      return countOfMine;
+    },
+    /**
+     * show the number of mines
+     * @function
+     * @param {Object} tile - TileItem component
+     * @param {Number} countOfMine - the number of mines
+     * @return {String} - tile activeState
+     */
+    setNumber: function(tile, countOfMine) {
+      this.tiles[tile.rowIndex][tile.columnIndex].class = 'mine-neighbor-' + countOfMine;
+      //this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'mine-neighbor-' + countOfMine);
+    },
+    /**
+     * opens a tile
+     * @function
+     * @param {Object} - tile component
+     * @return {undefined}
+     */
+    setOpen: function(tile) {
+      this.tiles[tile.rowIndex][tile.columnIndex].class = 'opened';
     },
     /**
      * flags a tile
      * @function
      * @param {Object} tile - TileItem component
-     * @return {undifined}
+     * @return {undefined}
      */
     setFlag: function(tile) {
-      this.tiles[tile.rowIndex].splice(tile.columnIndex, 1, 'flagged');
+      if (this.tiles[tile.rowIndex][tile.columnIndex].class === 'unopened') {
+        this.tiles[tile.rowIndex][tile.columnIndex].class = 'flagged';
+      } else if (this.tiles[tile.rowIndex][tile.columnIndex].class === 'flagged') {
+        this.tiles[tile.rowIndex][tile.columnIndex].class = 'unopened';
+      }
     },
   },
   created: function() {

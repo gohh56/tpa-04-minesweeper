@@ -1,6 +1,6 @@
 <template>
   <td
-    :class="activeState"
+    :class="tileClass"
     @click.exact="clickTile"
     @click.right.prevent="rightClickTile"
   ></td>
@@ -18,20 +18,25 @@ export default {
       type: Number,
       required: true
     },
-    activeState: {
+    tileClass: {
       type: String,
       required: true
     }
   },
-  data: function() {
-    return {
-      mined: Math.random() * 6 > 5,
-    };
-  },
   methods: {
+    /**
+     * click tile
+     * @function
+     * @return {Event} click-tile - click tile event
+     */
     clickTile: function() {
-      this.$emit('click-tile');
+      this.$emit('click-tile', this);
     },
+    /**
+     * right click tile
+     * @function
+     * @return {Event} right click tile - right click tile event
+     */
     rightClickTile: function() {
       this.$emit('right-click-tile',this);
     }
