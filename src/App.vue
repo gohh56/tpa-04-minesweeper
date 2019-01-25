@@ -194,6 +194,8 @@ export default {
     setFlag: function(tile) {
       if (this.tiles[tile.rowIndex][tile.columnIndex].class === 'unopened') {
         this.tiles[tile.rowIndex][tile.columnIndex].class = 'flagged';
+      } else if(this.tiles[tile.rowIndex][tile.columnIndex].class === 'flagged') {
+        this.tiles[tile.rowIndex][tile.columnIndex].class = 'unopened';
       }
     },
   },
