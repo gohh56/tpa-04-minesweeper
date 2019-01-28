@@ -28,9 +28,11 @@ export default {
      * click tile
      * @function
      * @return {Event} click-tile - click tile event
+     * @return {Number} rowIndex - row index of tile component
+     * @return {Number} columnIndex - column index of tile component
      */
     clickTile: function() {
-      this.$emit('click-tile', this);
+      this.$emit('click-tile', this.rowIndex, this.columnIndex);
     },
     /**
      * right click tile
@@ -38,7 +40,7 @@ export default {
      * @return {Event} right click tile - right click tile event
      */
     rightClickTile: function() {
-      this.$emit('right-click-tile',this);
+      this.$emit('right-click-tile', this.rowIndex, this.columnIndex);
     }
   }
 };
