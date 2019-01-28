@@ -102,6 +102,13 @@ export default {
           this.setNumber(rowIndex, columnIndex, countOfMine);
         } else {
           this.setOpen(rowIndex, columnIndex);
+          COUNT_RANGE.forEach((range, rangeIndex) => {
+            let toCheckRow = rowIndex + range.toAddRow;
+            let toCheckColumn = columnIndex + range.toAddColumn;
+            if (this.isNotOpened(toCheckRow, toCheckColumn)) {
+              this.openTile(toCheckRow, toCheckColumn);
+            }
+          })
         }
       }
     },
@@ -198,6 +205,18 @@ export default {
      */
     setOpen: function(rowIndex, columnIndex) {
       this.tiles[rowIndex][columnIndex].class = 'opened';
+    },
+    /**
+     * check tile is not opened
+     * @function
+     * @param {Number} rowIndex - target tile rowIndex
+     * @param {Number} columnIndex - target tile columnIndex
+     * @return {Boolean} isUnopened - return true if tile is not opened
+    */
+    isNotOpened: function(rowIndex, columnIndex) {
+      if (this.isInRange(rowIndex, columnIndex)) {
+        return (this.tiles[rowIndex][columnIndex].class === "unopened" || "flagged")
+      }
     },
     /**
      * flags a tile

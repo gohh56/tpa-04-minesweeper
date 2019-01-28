@@ -28,6 +28,8 @@ export default {
      * click tile
      * @function
      * @return {Event} click-tile - click tile event
+     * @return {Number} rowIndex - row index of tile component
+     * @return {Number} columnIndex - column index of tile component
      */
     clickTile: function() {
       this.$emit('click-tile', this.rowIndex, this.columnIndex);
