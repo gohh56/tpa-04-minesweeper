@@ -75,7 +75,8 @@ export default {
     /**
      * open tile
      * @function
-     * @param {Object} tile - TileItem component
+     * @param {Number} rowIndex - row index of target tile
+     * @param {Number} columnIndex - column index of target tile
      * @return {undefined}
      */
     openTile: function(rowIndex, columnIndex) {
@@ -92,7 +93,9 @@ export default {
           // (for each neighbor)
             // (if the neighbor has not been opened yet)
               // (open the neighbor)
- 
+      console.log('rowIndex:', rowIndex);
+      console.log('columnIndex:', columnIndex);
+
       if (this.tiles[rowIndex][columnIndex].mined) {
         this.setMine(rowIndex, columnIndex);
         this.showAll();
@@ -102,20 +105,28 @@ export default {
           this.setNumber(rowIndex, columnIndex, countOfMine);
         } else {
           this.setOpen(rowIndex, columnIndex);
+          console.log('target tile:', rowIndex, columnIndex);
           COUNT_RANGE.forEach((range, rangeIndex) => {
+            console.log('in range range:', range);
+            console.log('rangeIndex:', rangeIndex);
             let toCheckRow = rowIndex + range.toAddRow;
             let toCheckColumn = columnIndex + range.toAddColumn;
+            console.log('toCheckRow:', toCheckRow);
+            console.log('toCheckColumn:', toCheckColumn);
+            console.log('isNotOpened:', this.isNotOpened(toCheckRow, toCheckColumn));
             if (this.isNotOpened(toCheckRow, toCheckColumn)) {
+              console.log('re run');
               this.openTile(toCheckRow, toCheckColumn);
             }
-          })
+          });
         }
       }
     },
     /** 
      * show mine
      * @function
-     * @param {Object} tile - TileItem component
+     * @param {Number} rowIndex - row index of target tile
+     * @param {Number} columnIndex - column index of target tile
      * @return {undefined}
      */
     setMine: function(rowIndex, columnIndex) {
@@ -129,7 +140,8 @@ export default {
     showAll: function() {
       for (let rowIndex = 0; rowIndex < this.tiles.length; rowIndex += 1) {
         for (let columnIndex = 0; columnIndex < this.tiles[rowIndex].length; columnIndex += 1) {
-          if (this.tiles[rowIndex][columnIndex].class === 'unopened' || 'flagged') {
+          const tileClass = this.tiles[rowIndex][columnIndex].class;
+          if (tileClass === 'unopened' || tileClass === 'flagged') {
             if (this.tiles[rowIndex][columnIndex].mined) {
               this.setMine(rowIndex, columnIndex);
             } else {
@@ -161,8 +173,8 @@ export default {
     /**
      * check target tile is mine or not
      * @function
-     * @param {Number} row - check tile's row
-     * @param {Number} column - check tile's column
+     * @param {Number} rowIndex - check tile's row
+     * @param {Number} columnIndex - check tile's column
      * @return {Number} - if target tile is mine, return 1
      */
     isMine: function(rowIndex, columnIndex) {
@@ -171,7 +183,8 @@ export default {
     /**
      * collect information on its neighbors
      * @function
-     * @param {Object} tile - TileItem component
+     * @param {Number} rowIndex - row index of target tile
+     * @param {Number} columnIndex - column index of target tile
      * @param {Array} countRange - around tiles of click tile
      * @return {Number} - count how many mines surround the tile
      */
@@ -189,7 +202,8 @@ export default {
     /**
      * show the number of mines
      * @function
-     * @param {Object} tile - TileItem component
+     * @param {Number} rowIndex - row index of target tile
+     * @param {Number} columnIndex - column index of target tile
      * @param {Number} countOfMine - the number of mines
      * @return {String} - tile activeState
      */
@@ -200,7 +214,8 @@ export default {
     /**
      * opens a tile
      * @function
-     * @param {Object} - tile component
+     * @param {Number} rowIndex - row index of target tile
+     * @param {Number} columnIndex - column index of target tile
      * @return {undefined}
      */
     setOpen: function(rowIndex, columnIndex) {
@@ -215,13 +230,16 @@ export default {
     */
     isNotOpened: function(rowIndex, columnIndex) {
       if (this.isInRange(rowIndex, columnIndex)) {
-        return (this.tiles[rowIndex][columnIndex].class === "unopened" || "flagged")
+        console.log('isNotOpened tile:', this.tiles[rowIndex][columnIndex].class);
+        const tileClass = this.tiles[rowIndex][columnIndex].class;
+        return (tileClass === 'unopened' || tileClass === 'flagged');
       }
     },
     /**
      * flags a tile
      * @function
-     * @param {Object} tile - TileItem component
+     * @param {Number} rowIndex - row index of target tile
+     * @param {Number} columnIndex - column index of target tile
      * @return {undefined}
      */
     setFlag: function(rowIndex, columnIndex) {
