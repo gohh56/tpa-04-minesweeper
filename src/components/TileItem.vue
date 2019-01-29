@@ -38,6 +38,8 @@ export default {
      * right click tile
      * @function
      * @return {Event} right click tile - right click tile event
+     * @return {Number} rowIndex - row index of tile component
+     * @return {Number} columnIndex - column index of tile component
      */
     rightClickTile: function() {
       this.$emit('right-click-tile', this.rowIndex, this.columnIndex);
